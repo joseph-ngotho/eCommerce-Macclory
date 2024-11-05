@@ -4,6 +4,7 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import imageTobase64 from '../helpers/imageTobase64';
+import SummaryApi from '../common';
 
 const SignUp = () => {
   const [showPassowrd,setShowPassword] = useState(false)
@@ -40,11 +41,31 @@ const SignUp = () => {
       })
     }
 
-    const handleSubmit = (e)=>{
+    const handleSubmit = async(e)=>{
         e.preventDefault()
-    }
 
-    console.log("data login", data)
+        if(data.password === data.confirmPassword){
+            console.log("SummaryApi.signUp.url",'http://localhost:5000/api/signup')
+
+
+           const dataResponse = await fetch('http://localhost:5000/api/signup',{
+            method : "post",
+            headers : {
+                "content-type" : "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+
+        const dataApi = await dataResponse.json()
+
+        console.log("dataAPi",dataApi)
+
+        }else{
+            console.log("Please check password and confirm password")
+        }
+        
+    }
+    console.log("data login", data)    
   return (
     <section id='signup'>
     <div className='mx-auto container p-4'>

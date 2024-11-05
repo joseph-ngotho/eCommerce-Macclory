@@ -5,8 +5,13 @@ async function userSignUpController(req,res){
     try{
 
         const {email,password,name} = req.body
-
         console.log("req.body",req.body)
+
+        const user = await userModel.findOne({email})
+       
+        if(user){
+            throw new Error("Aready user exists")
+        }
 
         if(!email){
             throw new Error("Please provide email")
@@ -31,19 +36,21 @@ async function userSignUpController(req,res){
         }
 
         const userData = new userModel(payload)
-        const saveUser = userData.save()
-
+        const saveUser =  await userData.save()
+        console.log(saveUser)
+        
         res.status(201).json({
+         
             data : saveUser,
-            success : true,
+            success: true,
             error : false,
-            message : "user created Successfully!"
+            message : "User created Successfully!"
         })
          
     }catch(err){
         
         res.json({
-             message : err,
+             message : err.message || err,
              error : true,
              success : false,
          })
